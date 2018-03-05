@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+    <Appenders>
+        <Console name="brief_console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %36logger - %msg%n"/>
+        </Console>
+        <Console name="detailed_console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%-34t] %-5level %36logger:%-4L %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="home" level="debug" additivity="false">
+            <AppenderRef ref="detailed_console"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="brief_console"/>
+        </Root>
+    </Loggers>
+</Configuration>

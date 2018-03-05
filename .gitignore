@@ -1,0 +1,22 @@
+**/*.jar
+**/*.iml
+**/node_modules
+**/package-lock.json
+.idea
+**/target
+
+# compiled output
+**/dist
+**/tmp
+**/out-tsc
+
+# miscp
+**/.sass-cache
+**/connect.lock
+**/coverage
+**/libpeerconnection.log
+**/npm-debug.log
+**/testem.log
+**/typings
+
+src/main/resources/public/*
