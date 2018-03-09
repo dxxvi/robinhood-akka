@@ -4,6 +4,7 @@ import java.util.Base64
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.ActorMaterializer
+import home.robinhood.Utils
 import org.apache.logging.log4j.scala.Logging
 import spark.Spark._
 
