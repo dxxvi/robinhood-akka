@@ -4,6 +4,7 @@ import language.postfixOps
 import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.Uri.Query
+import home.robinhood._
 import org.apache.logging.log4j.scala.Logging
 
 object RobinhoodActor {

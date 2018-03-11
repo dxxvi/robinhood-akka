@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter
 
 import akka.actor.{Actor, ActorRef, Props, Timers}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import home.robinhood._
 import org.apache.logging.log4j.scala.Logging
 
 import language.postfixOps
@@ -12,7 +13,6 @@ import scala.concurrent.duration._
 import scala.concurrent.Future
 import scala.sys.SystemProperties
 import scala.util.{Failure, Success}
-
 import spray.json._
 
 object HttpActor {
