@@ -91,7 +91,7 @@ class HttpActor(username: String, password: String, wantedSymbols: String, robin
                             sendSingleRequest(
                                 HttpRequest(
                                     method = POST,
-                                    uri = s"$ROBINHOOD_SERVER/do/",
+                                    uri = s"$ROBINHOOD_SERVER/api-token-auth/",
                                     headers = List(Accept(MediaTypes.`application/json`)),
                                     entity = entity
                                 ),

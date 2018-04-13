@@ -9,6 +9,7 @@ import language.postfixOps
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}
+import home.robinhood.{Quote, RobinhoodOrder, RobinhoodOrderResults, RobinhoodQuote, RobinhoodQuoteResults, Utils}
 import org.scalatest.{BeforeAndAfterAll, FunSuiteLike, Matchers}
 
 import scala.io.Source
@@ -220,120 +221,42 @@ class BasicSpec extends TestKit(ActorSystem("R")) with FunSuiteLike with Matcher
         robinhoodOrder.updatedAt should be (LocalDateTime.of(2017, 12, 15, 14, 28, 29))
     }
 
-    test("spray json RobinhoodOrderResults") {
+    test("spray json RobinhoodOrderResults, print them out") {
         import spray.json._
-        import RobinhoodOrderResults._
-        val jsonString =
-            """
-              |{
-              |  "previous": null,
-              |  "results": [
-              |    {
-              |      "updated_at": "2017-12-15T19:28:29.314421Z",
-              |      "ref_id": "03c270ac-b0ef-4a98-a322-e1144e380b18",
-              |      "time_in_force": "gfd",
-              |      "fees": "0.04",
-              |      "cancel": null,
-              |      "id": "212083de-009d-40a4-a03f-278f277c0010",
-              |      "cumulative_quantity": "120.00000",
-              |      "stop_price": null,
-              |      "reject_reason": null,
-              |      "instrument": "https://api.robinhood.com/instruments/940fc3f5-1db5-4fed-b452-f3a2e4562b5f/",
-              |      "state": "filled",
-              |      "trigger": "immediate",
-              |      "override_dtbp_checks": false,
-              |      "type": "limit",
-              |      "last_transaction_at": "2017-12-15T19:28:29.114000Z",
-              |      "price": "10.30000000",
-              |      "executions": [
-              |        {
-              |          "timestamp": "2017-12-15T19:28:29.114000Z",
-              |          "price": "10.30000000",
-              |          "settlement_date": "2017-12-19",
-              |          "id": "20839edd-c1a1-42a7-af6c-cb63dc6e790e",
-              |          "quantity": "120.00000"
-              |        }
-              |      ],
-              |      "extended_hours": true,
-              |      "account": "https://api.robinhood.com/accounts/5RY82436/",
-              |      "url": "https://api.robinhood.com/orders/212083de-009d-40a4-a03f-278f277c0010/",
-              |      "created_at": "2017-12-15T17:28:22.882977Z",
-              |      "side": "sell",
-              |      "override_day_trade_checks": false,
-              |      "position": "https://api.robinhood.com/positions/5RY82436/940fc3f5-1db5-4fed-b452-f3a2e4562b5f/",
-              |      "average_price": "10.30000000",
-              |      "quantity": "120.00000"
-              |    },
-              |    {
-              |      "updated_at": "2017-12-15T17:15:51.708482Z",
-              |      "ref_id": "3d226d88-787f-4aac-9c8a-92823c771fb7",
-              |      "time_in_force": "gfd",
-              |      "fees": "0.02",
-              |      "cancel": null,
-              |      "id": "9b8b5a05-6a2c-4c7b-b171-a61c685c924c",
-              |      "cumulative_quantity": "16.00000",
-              |      "stop_price": null,
-              |      "reject_reason": null,
-              |      "instrument": "https://api.robinhood.com/instruments/940fc3f5-1db5-4fed-b452-f3a2e4562b5f/",
-              |      "state": "filled",
-              |      "trigger": "immediate",
-              |      "override_dtbp_checks": false,
-              |      "type": "limit",
-              |      "last_transaction_at": "2017-12-15T17:15:51.560000Z",
-              |      "price": "10.24000000",
-              |      "executions": [
-              |        {
-              |          "timestamp": "2017-12-15T17:15:51.560000Z",
-              |          "price": "10.24000000",
-              |          "settlement_date": "2017-12-19",
-              |          "id": "21525948-7fc5-4426-80e4-872e2d342330",
-              |          "quantity": "16.00000"
-              |        }
-              |      ],
-              |      "extended_hours": true,
-              |      "account": "https://api.robinhood.com/accounts/5RY82436/",
-              |      "url": "https://api.robinhood.com/orders/9b8b5a05-6a2c-4c7b-b171-a61c685c924c/",
-              |      "created_at": "2017-12-15T14:32:14.304016Z",
-              |      "side": "sell",
-              |      "override_day_trade_checks": false,
-              |      "position": "https://api.robinhood.com/positions/5RY82436/940fc3f5-1db5-4fed-b452-f3a2e4562b5f/",
-              |      "average_price": "10.24000000",
-              |      "quantity": "16.00000"
-              |    },
-              |    {
-              |      "updated_at": "2017-12-01T14:52:26.827424Z",
-              |      "ref_id": "70e731c6-f401-4ffa-b850-2ecc43fbcb1e",
-              |      "time_in_force": "gtc",
-              |      "fees": "0.00",
-              |      "cancel": null,
-              |      "id": "e3efcf7a-1b87-4c01-8596-9942f32e92b8",
-              |      "cumulative_quantity": "0.00000",
-              |      "stop_price": null,
-              |      "reject_reason": null,
-              |      "instrument": "https://api.robinhood.com/instruments/8e08c691-869f-482c-8bed-39d026215a85/",
-              |      "state": "cancelled",
-              |      "trigger": "immediate",
-              |      "override_dtbp_checks": false,
-              |      "type": "limit",
-              |      "last_transaction_at": "2017-12-01T14:52:26.675000Z",
-              |      "price": "18.60000000",
-              |      "executions": [],
-              |      "extended_hours": true,
-              |      "account": "https://api.robinhood.com/accounts/5RY82436/",
-              |      "url": "https://api.robinhood.com/orders/e3efcf7a-1b87-4c01-8596-9942f32e92b8/",
-              |      "created_at": "2017-11-30T22:17:17.245913Z",
-              |      "side": "buy",
-              |      "override_day_trade_checks": false,
-              |      "position": "https://api.robinhood.com/positions/5RY82436/8e08c691-869f-482c-8bed-39d026215a85/",
-              |      "average_price": null,
-              |      "quantity": "1.00000"
-              |    }
-              |  ],
-              |  "next": "https://api.robinhood.com/orders/?cursor=cD0yMDE3LTExLTMwKzIwJTNBNTIlM0ExNC4xMDE5MjclMkIwMCUzQTAw"
-              |}
-            """.stripMargin
+        import robinhood.RobinhoodOrderResults._
+        val jsonString = Source.fromInputStream(classOf[BasicSpec].getResourceAsStream("/MYGN-orders.json")).mkString
         val robinhoodOrderResults = jsonString.parseJson.convertTo[RobinhoodOrderResults]
         robinhoodOrderResults.previous should be (None)
+
+        class ROWrapper(var no: Option[Int] = None, val ro: RobinhoodOrder)
+
+        import scala.util.control.Breaks._
+        val a: Array[ROWrapper] = robinhoodOrderResults.results
+                .collect {
+                    case ro: RobinhoodOrder if ro.state == "filled" && ro.quantity == ro.cumulativeQuantity => new ROWrapper(None, ro)
+                }
+        var transactionNumber = 1
+        var coupleFound = true
+        while (coupleFound) {
+            coupleFound = false
+            val b = a.filter(_.no.isEmpty)
+            for (i <- 0 to b.length if b(i).no.isEmpty) {
+                val j = i + 1
+                if (b(i).ro.quantity == b(j).ro.quantity) {
+                    if (
+                        (b(i).ro.side == "buy" && b(j).ro.side == "sell" && b(i).ro.price < b(j).ro.price) ||
+                        (b(i).ro.side == "sell" && b(j).ro.side == "buy" && b(i).ro.price > b(j).ro.price)
+                    ) {
+                        b(i).no = Some(transactionNumber)
+                        b(j).no = Some(transactionNumber)
+                        transactionNumber += 1
+                        coupleFound = true
+                        break
+                    }
+                }
+            }
+        }
+//                .foreach(ro => println(f"${ro.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)} ${ro.side.toUpperCase}%-4s ${ro.quantity}%3d x ${ro.price}%5.2f"))
     }
 
     test("regular expression") {

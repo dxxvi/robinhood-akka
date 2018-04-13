@@ -17,7 +17,7 @@
         <scala.version.minor>4</scala.version.minor>
         <scala.version>${scala.version.major}.${scala.version.minor}</scala.version>
         <akka.version>2.5.11</akka.version>
-        <akka.http.version>10.1.0-RC2</akka.http.version>
+        <akka.http.version>10.1.1</akka.http.version>
     </properties>
 
     <dependencies>
@@ -94,6 +94,12 @@
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
             <version>9.4.8.v20171121</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi-windows64</artifactId>
+            <version>1.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -197,7 +203,7 @@
                     <junitxml>.</junitxml>
                     <filereports>WDF TestSuite.txt</filereports>
                     <stdout>W</stdout>
-                    <argLine>-Dhttps.proxyHost=usproxy.fg.rbc.com -Dhttps.proxyPort=8080</argLine>
+
                 </configuration>
                 <executions>
                     <execution>

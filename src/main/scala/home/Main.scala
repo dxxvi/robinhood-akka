@@ -23,8 +23,11 @@ object Main extends Logging with Utils {
 
             startTheWeb(Some(sas._1), Some(sas._3))
 */
-            init(optionMap.getOrElse("username", ""), optionMap.getOrElse("password", ""),
-                optionMap.getOrElse("wanted-symbols", ""))
+            init(
+                optionMap.getOrElse("username", ""),
+                new String(Base64.getDecoder.decode(optionMap.getOrElse("password", "eW91cl9wYXNzd29yZA=="))),
+                optionMap.getOrElse("wanted-symbols", "")
+            )
             awaitInitialization()
         }
     }
@@ -56,7 +59,7 @@ object Main extends Logging with Utils {
     def init(username: String, password: String, wantedSymbols: String): (ActorSystem, ActorMaterializer) = {
         implicit val system: ActorSystem = ActorSystem("R")
         implicit val materializer: ActorMaterializer = ActorMaterializer()
-        val robinhoodActor = system.actorOf(RobinhoodActor.props(username, new String(Base64.getDecoder.decode(password)), wantedSymbols))
+        val robinhoodActor = system.actorOf(RobinhoodActor.props(username, password, wantedSymbols))
         val robinhoodWebSocket = new RobinhoodWebSocketImpl(Some(robinhoodActor))
         webSocket("/api/websocket", robinhoodWebSocket)
         val senderActor = system.actorOf(SenderActor.props(robinhoodWebSocket))

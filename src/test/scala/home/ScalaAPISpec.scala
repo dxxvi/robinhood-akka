@@ -2,13 +2,10 @@ package home
 
 import java.time.{LocalDateTime, ZoneOffset}
 
-import akka.http.scaladsl.model.Uri
-import akka.http.scaladsl.model.Uri.Query
-import org.scalatest.{FunSuite, Matchers}
+import home.robinhood.Order
 
+import org.scalatest.{FunSuite, Matchers}
 import scala.collection.immutable.SortedSet
-import scala.io.Source
-import scala.sys.SystemProperties
 
 class ScalaAPISpec extends FunSuite with Matchers {
     test("Scala SortedSet") {
